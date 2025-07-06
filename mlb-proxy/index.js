@@ -16,13 +16,12 @@ function getYesterdayDate() {
 // Route: /furthest-homer
 app.get('/furthest-homer', async (req, res) => {
   const date = getYesterdayDate();
-
+  console.log("DATE", date);
   try {
     // 1. Get all games on that date
     const scheduleRes = await fetch(`https://statsapi.mlb.com/api/v1/schedule?date=${date}&sportId=1`);
     const scheduleData = await scheduleRes.json();
     const gamePks = scheduleData.dates?.[0]?.games.map(g => g.gamePk) || [];
-    console.log("HIT", gamePks);
     let maxHR = { distance: 0, player: null, game: null };
 
     // 2. Loop through each game and get play-by-play data
@@ -61,7 +60,8 @@ app.get('/furthest-homer', async (req, res) => {
             player: batter,
             game: gamePk,
             team: teamName,
-            pitchType: pitchType
+            pitchType: pitchType,
+            date: date
           };
         }
       }
